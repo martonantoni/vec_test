@@ -83,19 +83,10 @@ int Solver::quickestPath(int start_row, int start_col, int target_row, int targe
 
             int cost = current.cost + (mMap.terrain(current.r, current.c) == Terrain::Swamp ? 5 : 1);
             auto open_i = std::ranges::find_if(open, [=](const cNode& node) { return node.r == r && node.c == c; });
-            if (open_i != open.end())
-            {
-                if (open_i->cost > cost)
-                {
-                    open_i->cost = cost;
-                    open_i->hcost = cost + heuristic(r, c);
-                    std::ranges::make_heap(open, std::greater<>{}, &cNode::hcost);
-                }
-            }
-            else
+            if (open_i == open.end() || open_i->cost > cost)
             {
                 open.emplace_back(r, c, cost, cost + heuristic(r, c));
-                std::ranges::push_heap(open, std::greater<>{}, &cNode::hcost);
+                std::ranges::push_heap(open, std::greater<>{}, & cNode::hcost);
             }
         }
         auto closed_i = std::ranges::lower_bound(closed, std::pair{current.r, current.c});
