@@ -3,13 +3,13 @@
 #include <algorithm>
 #include <vector>
 
-#include "../common/allocation_tracker.h"
+#include "../common/allocation_counter.h"
 #include "../common/progress_bar.h"
 #include "../common/performance_measurer.h"
 
 cLogPerformance_Guard performanceGuard("main");
 
-template<class T> using TestedVec = std::vector<T, tAllocationTracer<T>>;
+template<class T> using TestedVec = std::vector<T, tAllocationCounter<T>>;
 
 enum class Terrain
 {
@@ -64,7 +64,7 @@ int Solver::quickestPath(int start_row, int start_col, int target_row, int targe
         if (current.r == target_row && current.c == target_col)
         {
             progressBar.done();
-            std::cout << "allocation count: " << tAllocationTracer<cNode>::allocationCount() << std::endl;
+            std::cout << "allocation count: " << tAllocationCounter<cNode>::allocationCount() << std::endl;
             return current.cost;
         }
         for (auto [dr, dc] : neighbours)

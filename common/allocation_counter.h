@@ -2,7 +2,7 @@
 
 #include <atomic>
 
-template <typename T> class tAllocationTracer : public std::allocator<T>
+template <typename T> class tAllocationCounter : public std::allocator<T>
 {
     inline static std::atomic<int> mAllocationCount = 0;
 public:
