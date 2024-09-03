@@ -7,8 +7,11 @@
 #include "../common/progress_bar.h"
 #include "../common/performance_measurer.h"
 #include "../common/xorshift.h"
+#include "../common/turbo_list.h"
 
-template<class T> using TestedVec = std::vector<T, tAllocationCounter<T>>;
+
+//template<class T> using TestedVec = std::vector<T>;
+template<class T> using TestedVec = TurboList<T>;
 
 cLogPerformance_Guard performanceGuard("main");
 
@@ -142,6 +145,13 @@ int main()
             progressBar.step();
         }
     }
-    std::cout << "allocation count: " << tAllocationCounter<uint64_t>::allocationCount() << std::endl;
-    std::cout << "Checksum: " << std::hex << checksum << std::dec << std::endl;
+    std::cout << "Checksum.... ";
+    if (checksum != 0x7ecf6291484bbe9)
+    {
+        std::cout << "FAILED\nexpected 0x7ecf6291484bbe9, got " << std::hex << checksum << std::dec << std::endl;
+    }
+    else
+    {
+        std::cout << "PASSED\n";
+    }
 }
