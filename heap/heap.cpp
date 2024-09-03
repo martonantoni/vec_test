@@ -8,9 +8,18 @@
 #include "../common/performance_measurer.h"
 #include "../common/xorshift.h"
 
+template<class T> using TestedVec = std::vector<T, tAllocationCounter<T>>;
+
 cLogPerformance_Guard performanceGuard("main");
 
-template<class T> using TestedVec = std::vector<T, tAllocationCounter<T>>;
+template<template<class...> class C> concept HeapContainer =
+    requires(C<uint64_t> vec)
+{
+    { vec.push_back(0) } -> std::same_as<void>;
+    { vec.pop_back() } -> std::same_as<void>;
+    { vec[0] } -> std::same_as<uint64_t&>;
+};
+static_assert(HeapContainer<TestedVec>);
 
 template<class T, auto Compare>
 class tHeap
